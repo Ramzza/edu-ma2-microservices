@@ -1,0 +1,38 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: be-ingress
+  namespace: edu-ma2-web
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: localhost
+      http:
+        paths:
+          - path: /fe
+            pathType: Prefix
+            backend:
+              service:
+                name: fe-service
+                port:
+                  number: 3000
+    - http:
+        paths:
+          - path: /srv
+            pathType: Prefix
+            backend:
+              service:
+                name: be-srv-service
+                port:
+                  number: 3001
+    - http:
+        paths:
+          - path: /fes/(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: fe-service
+                port:
+                  number: 3000

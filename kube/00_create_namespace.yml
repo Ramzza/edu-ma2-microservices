@@ -1,0 +1,6 @@
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: edu-ma2-web
+  labels:
+    name: edu-ma2-web

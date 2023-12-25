@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rabbitmq
+  namespace: edu-ma2-web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rabbitmq
+  template:
+    metadata:
+      labels:
+        app: rabbitmq
+    spec:
+      containers:
+        - name: rabbitmq
+          image: rabbitmq:3-management
+          ports:
+            - containerPort: 5672
+            - containerPort: 15672
+---
+apiVersion: v1 #version of the API to use
+kind: Service #what kind of object we're deploying
+metadata: #information about our object we're deploying
+  name: rabbitmq-service #aame of the service
+  namespace: edu-ma2-web
+  labels:
+    owner: ramza
+spec: #specifications for our object
+  type: ClusterIP #Ignore for now
+  ports: #Ignore for now
+    - name: http
+      port: 5672
+      protocol: TCP
+  selector: #label selector used to identify pods
+    app: rabbitmq

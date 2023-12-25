@@ -1,0 +1,42 @@
+apiVersion: apps/v1 #version of the API to use
+kind: Deployment #what kind of object we're deploying
+metadata: #information about our object we're deploying
+  name: be-srv-deployment #ame of the deployment
+  namespace: edu-ma2-web
+  labels: #a labels on the deployments created
+    owner: ramza
+spec: #specifications for our object
+  replicas: 1 #the number of pods that should always be running
+  selector: #which pods the replica set should be responsible for
+    matchLabels:
+      app: be-srv-client #any pods with labels matching this I'm responsible for
+  template: #the pod template that gets deployed
+    metadata:
+      labels: #labels on the replica set and pods created
+        app: be-srv-client
+    spec:
+      containers:
+        - name: be-srv-container #the name of the container within the pod
+          image: ramza/edu-ma2-web-be-srv:latest #which container image should be pulled
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3001 #the port of the container within the pod
+              protocol: TCP
+      imagePullSecrets:
+        - name: edu-ma2-web-docker-registry
+---
+apiVersion: v1 #version of the API to use
+kind: Service #what kind of object we're deploying
+metadata: #information about our object we're deploying
+  name: be-srv-service #aame of the service
+  namespace: edu-ma2-web
+  labels:
+    owner: ramza
+spec: #specifications for our object
+  type: ClusterIP #Ignore for now
+  ports: #Ignore for now
+    - name: http
+      port: 3001
+      protocol: TCP
+  selector: #label selector used to identify pods
+    app: be-srv-client
